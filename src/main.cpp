@@ -53,3 +53,60 @@ public:
                 }
             }
         }
+
+        vector<int> path;
+        for (int at = goal; at != start; at = parent[at]) {
+            if (parent.find(at) == parent.end()) return {};
+            path.push_back(at);
+        }
+        path.push_back(start);
+        reverse(path.begin(), path.end());
+        return path;
+    }
+
+    vector<int> aStar(int start, int goal, unordered_map<int, pair<int, int>> &coordinates) {
+        auto heuristic = [&](int a, int b) {
+            return sqrt(pow(coordinates[a].first - coordinates[b].first, 2) +
+                        pow(coordinates[a].second - coordinates[b].second, 2));
+        };
+        
+        unordered_map<int, int> parent;
+        unordered_map<int, double> gScore, fScore;
+        priority_queue<Node, vector<Node>, greater<Node>> pq;
+        
+        for (auto &[node, _] : adj) {
+            gScore[node] = numeric_limits<double>::infinity();
+            fScore[node] = numeric_limits<double>::infinity();
+        }
+        
+        gScore[start] = 0;
+        fScore[start] = heuristic(start, goal);
+        pq.push({start, fScore[start]});
+        
+        while (!pq.empty()) {
+            int current = pq.top().id;
+            pq.pop();
+            
+            if (current == goal) break;
+            
+            for (const auto &edge : adj[current]) {
+                double tentative_gScore = gScore[current] + edge.weight;
+                if (tentative_gScore < gScore[edge.to]) {
+                    parent[edge.to] = current;
+                    gScore[edge.to] = tentative_gScore;
+                    fScore[edge.to] = gScore[edge.to] + heuristic(edge.to, goal);
+                    pq.push({edge.to, fScore[edge.to]});
+                }
+            }
+        }
+        
+        vector<int> path;
+        for (int at = goal; at != start; at = parent[at]) {
+            if (parent.find(at) == parent.end()) return {};
+            path.push_back(at);
+        }
+        path.push_back(start);
+        reverse(path.begin(), path.end());
+        return path;
+    }
+};
