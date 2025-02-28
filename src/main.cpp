@@ -156,7 +156,7 @@ int main() {
     vector<int> pathDijkstra = graph.dijkstra(start, goal);
     graph.floydWarshall(nodes);
     
-    // Function to print paths in a structured manner
+    // Function to print paths in a structuredrm manner
     auto printPath = [](const string &name, const vector<int> &path) {
         cout << name << " Path: ";
         if (path.empty()) cout << "No path found!";
