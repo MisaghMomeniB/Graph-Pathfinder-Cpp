@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <cmath>
 #include <limits>
+#include <algorithm> // Added for std::reverse
 
 using namespace std;
 
@@ -60,7 +61,7 @@ public:
             path.push_back(at);
         }
         path.push_back(start);
-        reverse(path.begin(), path.end());
+        std::reverse(path.begin(), path.end()); // Fixed reverse function
         return path;
     }
 
@@ -106,7 +107,7 @@ public:
             path.push_back(at);
         }
         path.push_back(start);
-        reverse(path.begin(), path.end());
+        std::reverse(path.begin(), path.end()); // Fixed reverse function
         return path;
     }
 };
@@ -135,4 +136,4 @@ int main() {
     cout << endl;
     
     return 0;
-}
+}ذ
