@@ -110,3 +110,29 @@ public:
         return path;
     }
 };
+
+int main() {
+    Graph graph;
+    graph.addEdge(1, 2, 1);
+    graph.addEdge(1, 3, 4);
+    graph.addEdge(2, 3, 2);
+    graph.addEdge(2, 4, 5);
+    graph.addEdge(3, 4, 1);
+    
+    unordered_map<int, pair<int, int>> coordinates = {
+        {1, {0, 0}}, {2, {1, 2}}, {3, {2, 2}}, {4, {3, 0}}
+    };
+    
+    vector<int> pathDijkstra = graph.dijkstra(1, 4);
+    vector<int> pathAStar = graph.aStar(1, 4, coordinates);
+    
+    cout << "Dijkstra Path: ";
+    for (int node : pathDijkstra) cout << node << " ";
+    cout << endl;
+    
+    cout << "A* Path: ";
+    for (int node : pathAStar) cout << node << " ";
+    cout << endl;
+    
+    return 0;
+}
