@@ -33,10 +33,18 @@ class Graph {
         vector<string> nodeNames;
 
     // Function to add an edge to the graph
-    void addEdge(int u, int v, int w, bool directed = false) {
+    void addEdge(const string &u, const string &v, double w, bool directed = false) {
         adj[u].push_back({v, w});
         if (!directed) {
             adj[v].push_back({u, w});
+        }
+        if (nodeIndex.find(u) == nodeIndex.end()) {
+            nodeIndex[u] = nodeNames.size();
+            nodeNames.push_back(u);
+        }
+        if (nodeIndex.find(v) == nodeIndex.end()) {
+            nodeIndex[v] = nodeNames.size();
+            nodeNames.push_back(v);
         }
     }
 
