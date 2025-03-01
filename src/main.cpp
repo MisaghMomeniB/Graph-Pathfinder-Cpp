@@ -27,8 +27,10 @@ struct Node {
 };
 
 class Graph {
-public:
-    unordered_map<int, vector<Edge>> adj; // Adjacency list representation of the graph
+    public:
+        unordered_map<string, vector<Edge>> adj; // Adjacency list
+        unordered_map<string, int> nodeIndex;   // [NEW FEATURE] Mapping names to indices
+        vector<string> nodeNames;
 
     // Function to add an edge to the graph
     void addEdge(int u, int v, int w, bool directed = false) {
