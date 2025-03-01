@@ -13,7 +13,8 @@ using namespace std;
 
 // Structure to represent an edge in the graph
 struct Edge {
-    int to, weight;
+    string to;
+    double weight;
 };
 
 // Structure to represent a node in priority queue
