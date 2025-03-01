@@ -27,10 +27,10 @@ struct Node {
 };
 
 class Graph {
-    public:
-        unordered_map<string, vector<Edge>> adj; // Adjacency list
-        unordered_map<string, int> nodeIndex;   // [NEW FEATURE] Mapping names to indices
-        vector<string> nodeNames;
+public:
+    unordered_map<string, vector<Edge>> adj; // Adjacency list
+    unordered_map<string, int> nodeIndex;   // [NEW FEATURE] Mapping names to indices
+    vector<string> nodeNames;               // [NEW FEATURE] Stores names of nodes
 
     // Function to add an edge to the graph
     void addEdge(const string &u, const string &v, double w, bool directed = false) {
@@ -60,13 +60,12 @@ class Graph {
         }
     }
 
-    // Implementation of Dijkstra's algorithm using set for optimization
-    vector<int> dijkstra(int start, int goal) {
-        unordered_map<int, int> parent; // Stores parent nodes for path reconstruction
-        unordered_map<int, double> dist; // Stores shortest distances
-        set<pair<double, int>> pq; // Min-heap priority queue using set
+    // Dijkstra's algorithm with path reconstruction
+    vector<string> dijkstra(const string &start, const string &goal) {
+        unordered_map<string, string> parent; // Path reconstruction
+        unordered_map<string, double> dist;
+        set<pair<double, string>> pq;
 
-        // Initialize distances to infinity
         for (auto &[node, _] : adj) {
             dist[node] = numeric_limits<double>::infinity();
         }
@@ -74,26 +73,25 @@ class Graph {
         pq.insert({0, start});
 
         while (!pq.empty()) {
-            int current = pq.begin()->second;
-            pq.erase(pq.begin()); // Remove the node with the smallest distance
+            string current = pq.begin()->second;
+            pq.erase(pq.begin());
 
             if (current == goal) break;
 
             for (const auto &edge : adj[current]) {
                 double newDist = dist[current] + edge.weight;
                 if (newDist < dist[edge.to]) {
-                    pq.erase({dist[edge.to], edge.to}); // Remove outdated entry
+                    pq.erase({dist[edge.to], edge.to});
                     dist[edge.to] = newDist;
                     parent[edge.to] = current;
-                    pq.insert({newDist, edge.to}); // Insert updated entry
+                    pq.insert({newDist, edge.to});
                 }
             }
         }
-        
-        // Reconstruct the shortest path from goal to start
-        vector<int> path;
-        for (int at = goal; at != start; at = parent[at]) {
-            if (parent.find(at) == parent.end()) return {}; // No path found
+
+        vector<string> path;
+        for (string at = goal; at != start; at = parent[at]) {
+            if (parent.find(at) == parent.end()) return {};
             path.push_back(at);
         }
         path.push_back(start);
@@ -101,19 +99,22 @@ class Graph {
         return path;
     }
 
-    // Implementation of Floyd-Warshall algorithm for all-pairs shortest paths
-    void floydWarshall(int n) {
+    // Floyd-Warshall algorithm
+    void floydWarshall() {
+        int n = nodeNames.size();
         vector<vector<double>> dist(n, vector<double>(n, numeric_limits<double>::infinity()));
-        for (int i = 0; i < n; i++) dist[i][i] = 0; // Distance to self is zero
-        
-        // Initialize distances from adjacency list
+
+        for (int i = 0; i < n; i++) dist[i][i] = 0;
+
         for (auto &[u, edges] : adj) {
+            int uIdx = nodeIndex[u];
             for (auto &edge : edges) {
-                dist[u][edge.to] = edge.weight;
+                int vIdx = nodeIndex[edge.to];
+                dist[uIdx][vIdx] = edge.weight;
             }
         }
-        
-        // Run Floyd-Warshall algorithm
+
+        // Algorithm Execution
         for (int k = 0; k < n; k++) {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
@@ -125,15 +126,20 @@ class Graph {
                 }
             }
         }
-        
-        // Print the shortest distances between every pair of vertices
-        cout << "Shortest distances between every pair of vertices:\n";
+
+        // [NEW FEATURE] Detect Negative Cycle
+        for (int i = 0; i < n; i++) {
+            if (dist[i][i] < 0) {
+                cout << "Negative cycle detected!\n";
+                return;
+            }
+        }
+
+        // Print result
+        cout << "Shortest distances:\n";
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (dist[i][j] == numeric_limits<double>::infinity())
-                    cout << "INF ";
-                else
-                    cout << dist[i][j] << " ";
+                cout << (dist[i][j] == numeric_limits<double>::infinity() ? "INF" : to_string(dist[i][j])) << " ";
             }
             cout << endl;
         }
@@ -142,39 +148,46 @@ class Graph {
 
 int main() {
     Graph graph;
-    int edges, u, v, w, nodes;
-    bool directed;
-    
-    // Read input from file instead of manual input
     ifstream inputFile("graph_input.txt");
+
     if (!inputFile) {
         cout << "Error opening file!" << endl;
         return 1;
     }
-    
-    inputFile >> nodes >> edges >> directed;
-    
-    for (int i = 0; i < edges; i++) {
-        inputFile >> u >> v >> w;
+
+    bool directed;
+    inputFile >> directed;
+
+    string u, v;
+    double w;
+    while (inputFile >> u >> v >> w) {
         graph.addEdge(u, v, w, directed);
     }
     inputFile.close();
 
-    int start, goal;
+    // Print the graph
+    graph.printGraph();
+
+    // User input for Dijkstra
+    string start, goal;
     cout << "Enter start and goal nodes: ";
     cin >> start >> goal;
 
-    vector<int> pathDijkstra = graph.dijkstra(start, goal);
-    graph.floydWarshall(nodes);
-    
-    // Function to print paths in a structuredrm manner
-    auto printPath = [](const string &name, const vector<int> &path) {
+    // Run Dijkstra
+    vector<string> pathDijkstra = graph.dijkstra(start, goal);
+
+    // Run Floyd-Warshall
+    graph.floydWarshall();
+
+    // [NEW FEATURE] Print Path Function
+    auto printPath = [](const string &name, const vector<string> &path) {
         cout << name << " Path: ";
         if (path.empty()) cout << "No path found!";
-        for (int node : path) cout << node << " ";
+        for (const string &node : path) cout << node << " ";
         cout << endl;
     };
-    
+
     printPath("Dijkstra", pathDijkstra);
+
     return 0;
 }
