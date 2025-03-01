@@ -19,7 +19,7 @@ struct Edge {
 
 // Structure to represent a node in priority queue
 struct Node {
-    int id;
+    string id;
     double cost;
     bool operator>(const Node &other) const {
         return cost > other.cost;
