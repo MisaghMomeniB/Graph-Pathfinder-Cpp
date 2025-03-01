@@ -48,7 +48,7 @@ class Graph {
         }
     }
 
-    // Function to print the adjacency list of the graph
+    // Print adjacency list
     void printGraph() {
         cout << "Graph adjacency list:\n";
         for (auto &[node, edges] : adj) {
