@@ -16,10 +16,13 @@ struct Edge {
     int to, weight;
 };
 
-// Structure to represent an edge in the graph
-struct Edge {
-    string to;
-    double weight;
+// Structure to represent a node in priority queue
+struct Node {
+    int id;
+    double cost;
+    bool operator>(const Node &other) const {
+        return cost > other.cost;
+    }
 };
 
 class Graph {
