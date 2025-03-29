@@ -32,6 +32,7 @@ public:
     vector<string> nodeNames;
     vector<vector<int>> next;
 
+    // Function to add an edge to the graph
     void addEdge(const string &u, const string &v, double w, bool directed = false) {
         adj[u].push_back({v, w});
         if (!directed) {
