@@ -16,6 +16,7 @@ struct Edge {
     double weight;
 };
 
+// Structure to represent an edge in the graph
 struct Node {
     string id;
     double cost;
