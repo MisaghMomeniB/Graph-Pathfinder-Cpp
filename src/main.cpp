@@ -38,6 +38,8 @@ public:
         if (!directed) {
             adj[v].push_back({u, w});
         }
+        // Add nodes to the index list if they are not already present
+
         if (nodeIndex.find(u) == nodeIndex.end()) {
             nodeIndex[u] = nodeNames.size();
             nodeNames.push_back(u);
