@@ -1,156 +1,174 @@
-# Graph Algorithms in C++ 📊
+# 🧭 Graph Pathfinder (C++)
 
-This repository contains a C++ implementation of **Graph Algorithms**, focusing on **Dijkstra's Algorithm** (for shortest path) and **Floyd-Warshall Algorithm** (for all-pairs shortest paths). The code is designed to handle both directed and undirected graphs, allowing you to find optimal paths between nodes efficiently. 🚀
-
----
-
-## Table of Contents 📚
-
-1. [Overview](#overview)
-2. [Features](#features)
-3. [How to Run](#how-to-run)
-4. [Explanation of Code](#explanation-of-code)
-5. [Example Input/Output](#example-inputoutput)
-6. [License](#license)
+A C++ implementation of **graph pathfinding algorithms**, focused on readability and performance. Ideal for learning and integrating into game engines, network analysis tools, or routing systems.
 
 ---
 
-## Overview 📝
+## 📋 Table of Contents
 
-This C++ program provides an implementation of two essential graph algorithms:
-
-1. **Dijkstra's Algorithm**: 
-   - Used for finding the shortest path from a source node to a target node in a weighted graph.
-   
-2. **Floyd-Warshall Algorithm**:
-   - Computes the shortest path between all pairs of nodes in a graph. It works for both directed and undirected graphs.
-
----
-
-## Features ✨
-
-- **Graph Representation**: 
-  - Uses an **Adjacency List** to represent the graph. 
-  - Supports both **directed** and **undirected** graphs.
-
-- **Dijkstra's Algorithm**:
-  - Finds the shortest path between a source and target node.
-  - Uses a **priority queue** to ensure efficient pathfinding.
-
-- **Floyd-Warshall Algorithm**:
-  - Computes the shortest paths between all pairs of nodes in the graph.
-  - Prints the results in a matrix form.
-
-- **File Input**: 
-  - Graph data is read from a text file (`graph_input.txt`), making it easier to work with large graphs.
+1. [Overview](#overview)  
+2. [Features](#features)  
+3. [Algorithms Implemented](#algorithms-implemented)  
+4. [Installation & Build](#installation--build)  
+5. [Usage Examples](#usage-examples)  
+6. [Code Structure](#code-structure)  
+7. [Performance & Complexity](#performance--complexity)  
+8. [Contributing](#contributing)  
+9. [License](#license)
 
 ---
 
-## How to Run 🏃‍♀️
+## 💡 Overview
 
-### Prerequisites
-
-Ensure that you have a C++ compiler installed (e.g., GCC, Clang).
-
-### Steps:
-
-1. Clone this repository to your local machine.
-2. Create an input file `graph_input.txt` containing the graph data. Example format:
-   ```
-   5 6 0   # 5 nodes, 6 edges, undirected graph
-   0 1 10
-   0 4 20
-   1 2 10
-   2 4 50
-   2 3 30
-   3 4 10
-   ```
-
-3. Compile the program:
-   ```bash
-   g++ graph_algorithms.cpp -o graph_algorithms
-   ```
-
-4. Run the program:
-   ```bash
-   ./graph_algorithms
-   ```
-
-5. Enter the **start** and **goal** nodes when prompted.
+This project provides clean, modern C++ implementations of path-finding algorithms on weighted graphs. It’s built with **C++17**, leveraging `std::vector`, `std::priority_queue`, and expressive templates. The code is written for both standalone CLI tests and easy integration into game or simulation engines.
 
 ---
 
-## Explanation of Code 💡
+## ✅ Features
 
-### Graph Class:
-
-The `Graph` class contains the main logic of the graph algorithms:
-
-- **Data Structure**: 
-  - An `unordered_map` is used to represent the adjacency list, where each key is a node, and its value is a vector of `Edge` structs containing destination nodes and edge weights.
-
-### Dijkstra’s Algorithm:
-
-- The **Dijkstra** function implements Dijkstra’s shortest path algorithm using a **set** as a priority queue (min-heap).
-- For each node, the algorithm keeps track of the shortest known distance from the start node. It updates these distances as it explores the graph.
-- If the algorithm finds a shorter path, it updates the distance and the parent node for path reconstruction.
-
-### Floyd-Warshall Algorithm:
-
-- The **Floyd-Warshall** function computes the shortest path between all pairs of nodes using a dynamic programming approach.
-- A matrix is used to store the shortest distances between all pairs, and it is updated through three nested loops, each representing a possible intermediate node.
-
-### Main Function:
-
-- The program reads graph data from a file (`graph_input.txt`), builds the graph, and allows the user to input **start** and **goal** nodes for Dijkstra’s Algorithm.
-- The shortest path is computed and printed.
-- The Floyd-Warshall algorithm is executed to display the shortest distances between all pairs of nodes.
+- 📈 **Multiple algorithms** – Choose between Dijkstra, A\*, and Bellman-Ford  
+- 🧩 **Weighted & Directional Graphs** – Supports directed, undirected, and weighted edges  
+- 🏁 **CLI Example App** – Load graphs from text files and compute shortest paths  
+- 📊 **Path Reconstruction** – Recover the actual path and display its cost  
+- 🧪 **Edge Cases Handling** – Negative cycle detection with Bellman-Ford
 
 ---
 
-## Example Input/Output 📂
+## 🧠 Algorithms Implemented
 
-### Example Input:
+- **Dijkstra's Algorithm** – Guaranteed shortest path for non-negative weights  
+- **A\*** – Heuristic-based search with customizable heuristics  
+- **Bellman–Ford** – Supports negative weights and cycle detection  
 
-Given the following input file (`graph_input.txt`):
+---
+
+## ⚙️ Installation & Build
+
+**Prerequisites**:  
+- C++17-compatible compiler (`g++`, `clang++`, MSVC)
+- CMake (optional but recommended)
+
+**Build from source**:
+```bash
+git clone https://github.com/MisaghMomeniB/Graph-Pathfinder-Cpp.git
+cd Graph-Pathfinder-Cpp
+mkdir build && cd build
+cmake ..
+make
+````
+
+After building, you’ll get:
+
+* `graph_pathfinder` CLI executable
+* `libgraph_pathfinder.a` static library (in `build/lib`)
+* Headers (in `include/`)
+
+---
+
+## 🚀 Usage Examples
+
+### CLI Usage
+
+Assuming a graph file `simple_graph.txt` with:
 
 ```
-5 6 0
-0 1 10
-0 4 20
-1 2 10
-2 4 50
-2 3 30
-3 4 10
+5 6
+0 1 2.5
+0 2 1.5
+1 3 1.0
+2 3 2.0
+2 4 3.0
+3 4 1.2
 ```
 
-And the user inputs:
+Run:
+
+```bash
+./graph_pathfinder --algo dijkstra --input simple_graph.txt --start 0 --end 4
+```
+
+Expected output:
 
 ```
-Start Node: 0
-Goal Node: 4
+Path found: 0 -> 2 -> 3 -> 4
+Total cost: 4.7
 ```
 
-### Example Output:
+### Library Integration
 
-```
-Graph adjacency list:
-Node 0: (1, 10) (4, 20) 
-Node 1: (0, 10) (2, 10) 
-Node 2: (1, 10) (4, 50) (3, 30) 
-Node 3: (2, 30) (4, 10) 
-Node 4: (0, 20) (2, 50) (3, 10) 
+```cpp
+#include "GraphPathfinder.hpp"
 
-Dijkstra Path: 0 1 2 3 4 
+int main() {
+    Graph g(5);
+    g.addEdge(0,1,2.5);
+    g.addEdge(0,2,1.5);
+    g.addEdge(1,3,1.0);
+    g.addEdge(2,3,2.0);
+    g.addEdge(2,4,3.0);
+    g.addEdge(3,4,1.2);
 
-Shortest distances between every pair of vertices:
-0 10 20 50 20 
-10 0 10 30 20 
-20 10 0 30 30 
-50 30 30 0 10 
-20 20 30 10 0 
+    Pathfinder pf(g);
+    auto result = pf.aStar(0, 4, [](int u, int v){
+        // Zero heuristic—equivalent to Dijkstra
+        return 0.0;
+    });
+
+    if (result.found) {
+        std::cout << "Path: ";
+        for (auto n : result.path) std::cout << n << " ";
+        std::cout << "\nCost: " << result.cost << "\n";
+    }
+    return 0;
+}
 ```
 
 ---
 
-Feel free to contribute, open issues, or ask questions! 😊
+## 🧱 Code Structure
+
+```
+Graph-Pathfinder-Cpp/
+├── src/
+│   ├── Graph.cpp
+│   ├── GraphPathfinder.cpp
+│   └── main.cpp          # CLI entry
+├── include/
+│   ├── Graph.hpp
+│   └── GraphPathfinder.hpp
+├── build/                # Generated by CMake
+└── README.md             # This file
+```
+
+---
+
+## 📊 Performance & Complexity
+
+| Algorithm    | Time Complexity            | Space Complexity | Notes                            |
+| ------------ | -------------------------- | ---------------- | -------------------------------- |
+| Dijkstra     | O((V + E) log V)           | O(V + E)         | For non-negative edge weights    |
+| A\*          | O((V + E) log V) best-case | O(V + E)         | With good heuristic (admissible) |
+| Bellman–Ford | O(V·E)                     | O(V + E)         | Detects negative cycles          |
+
+---
+
+## 🤝 Contributing
+
+Contributions and improvements are welcome!
+
+* Add BFS-based unweighted search
+* Implement additional heuristics or optimizations
+* Add path visualization support (e.g., GraphViz)
+* Improve CLI with format flags or verbose mode
+
+To contribute:
+
+1. Fork it
+2. Create a branch (`feature/…`)
+3. Submit a Pull Request describing your changes
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
